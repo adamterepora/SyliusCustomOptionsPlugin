@@ -93,8 +93,18 @@ trait OrderItemCustomerOptionCapableTrait
 
         $product = $item instanceof self ? $item->getProduct() : null;
         $hasOpts = $product->hasCustomerOptions();
-        return ($product instanceof ProductInterface) ? !$hasOpts : true;
+        if ($product instanceof ProductInterface && !$hasOpts) return true;
 
-        return false;
+        $conf = $this->getCustomerOptionConfigurationAsSimpleArray();
+        $conf2 = $item->getCustomerOptionConfigurationAsSimpleArray();
+
+        if ($conf && !$conf2) return false;
+
+        foreach ($conf2 as $optionCode => $optionValueCode) {
+            if (!array_key_exists($optionCode, $conf)) return false;
+            if (!in_array($optionValueCode, $conf)) return false;
+        }
+
+        return true;
     }
 }
