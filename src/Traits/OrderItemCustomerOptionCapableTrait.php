@@ -92,7 +92,9 @@ trait OrderItemCustomerOptionCapableTrait
         }
 
         $product = $item instanceof self ? $item->getProduct() : null;
+        $hasOpts = $product->hasCustomerOptions();
+        return ($product instanceof ProductInterface) ? !$hasOpts : true;
 
-        return ($product instanceof ProductInterface) ? $product->hasCustomerOptions() : true;
+        return false;
     }
 }
